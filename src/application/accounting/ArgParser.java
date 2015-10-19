@@ -1,3 +1,4 @@
+//Klasse ArgParser, die eine Programmzeile ausliesst und analysiert.
 public class ArgParser {
 
     private String[] args = null;
