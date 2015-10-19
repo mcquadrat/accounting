@@ -1,3 +1,4 @@
 *.class
 .ant-targets-build.xml
 dist/
+*.tar.bz2
