@@ -15,7 +15,9 @@ public class ArgParser {
         
     } // end of special constructor "ArgParser(String[])"
 
-
+		/*
+		parseArgs() liesst Programmzeile aus
+		*/
     private void parseArgs() {
 
         StringBuffer sb = null;
