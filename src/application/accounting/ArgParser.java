@@ -1,3 +1,4 @@
+package application.accounting;
 public class ArgParser {
 
     private String[] args = null;
