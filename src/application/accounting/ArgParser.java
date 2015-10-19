@@ -84,6 +84,9 @@ public class ArgParser {
 
 
     @Override
+    /*
+    Analysiert die Eingabe und gibt die Analyse als String zurueck.
+    */
     public String toString() {
 
         StringBuffer sb = new StringBuffer();
