@@ -9,6 +9,7 @@ public class Main{
 			args[0] = ap.getInputFilename();
 			args[1] = ap.getNonOptions();
 			args[2] = ap.getOutputFilename();
+			args[3] = ap.getLogFilename();
 			Buchhaltung.call_main(args);
 		}
 	}
