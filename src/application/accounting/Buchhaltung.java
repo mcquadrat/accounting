@@ -10,6 +10,9 @@ import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 
 public class Buchhaltung {
@@ -23,6 +26,9 @@ public class Buchhaltung {
 	}
 	
 	public static void call_main(String[] args) {
+	
+		String baseName = "Buchhaltung";
+		ResourceBundle rb = ResourceBundle.getBundle(baseName);
 		
 		//Logger wird aktiviert
 		try{
@@ -55,7 +61,10 @@ public class Buchhaltung {
 		String line;
 		try{
 			reader = new BufferedReader(new FileReader(fileIn));
-			logger.info("lese von Datei: " + fileIn);
+			
+			String readinput_msg = rb.getString("readinput_msg");
+			logger.info(readinput_msg + ": " + fileIn);
+			
 			int zeile = 0;
 			while ((line = reader.readLine()) != null){
 				if (line.startsWith("#")){
