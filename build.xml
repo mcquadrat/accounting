@@ -58,6 +58,31 @@
 								-l ./src/data/daten.csv.log 0.05"/>
 		</java>
 	</target>
+	
+	<target name="create-dirs">
+		<mkdir dir="build/classes/package/de"/>
+		<mkdir dir="dist/data"/>
+		</target>
+		
+	<!-- tests if the language links are set correct -->
+	<target name="test-set-language-links" depends="create-dirs">
+		<condition property="isNotALangDir">
+			<not>
+				<available file=".dist/data/lang"
+							type="dir" />
+			</not>
+		</condition>
+	</target>
+	
+	<!-- set the language link if it is not done yet -->
+	<target name="create-language-links" depends="test-set-language-links" if="isNotALangDir">
+		<exec executable="ln" error="/dev/null" os="Linux">
+			<arg line="-sn" /> <!-- n: prohibits endles /de/de/... chains -->
+			<arg file="./src/data/lang" />
+			<arg file="./dist/data/lang" />
+		</exec>
+	</target>
+		
   
   
 </project>
