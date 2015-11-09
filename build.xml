@@ -2,9 +2,7 @@
 
 <project name="accounting" default="archive">
 
-  <target name="init">
-    <mkdir dir="build/classes"/>
-    <mkdir dir="dist"/>
+  <target name="init" depends="create-language-links">
   </target>
 
   <target name="compile" depends="init">
@@ -19,9 +17,7 @@
         basedir="build/classes"/>
   </target>
 
-  <target name="clean" depends="init">
-    <delete dir="build"/>
-    <delete dir="dist"/>
+  <target name="clean" depends="init, delete-dirs-carefully">
   </target>
 
   <target name="execute" depends="compile">
@@ -74,7 +70,7 @@
 	
 	<target name="create-dirs">
 		<mkdir dir="build/classes/package/de"/>
-		<mkdir dir="dist/data"/>
+		<mkdir dir="dist/data/etc"/>
 		</target>
 		
 	<!-- tests if the language links are set correct -->
@@ -115,6 +111,59 @@
 			<arg file="./dist/data/lang" />
 		</exec>
 	</target>
+	
+	
+	
+	<!-- set the current time, needed by themanifest -->
+	<tstamp>
+		<format property="timestamp.isoformat"
+				 pattern="yyyy-MM-dd'T'HH:mm:ss" locale="de"/>
+	</tstamp>
+	
+	<!-- creates the jar manifest 
+		needed for theexecution of the jar file -->
+	<target name="create-manifest"
+				depends="init">
+		<manifest file="${etc}/MANIFEST.MF">
+			<attribute name="Built-By" 
+						 value="${author.prj}"/>
+			<attribute name="Built-On"
+						 value="${timestamp.isoformat}"/>
+			<attribute name="Main-Class"
+						 value="application/accounting/Main"/>
+		</manifest>
+	</target>
+	
+	
+	<target name="archive-application"
+				 depends="compile, create-manifest"
+				 description="creates a Java archive ofan executable program">
+		<jar destfile="dist/${project.prj.lc}-app.jar"
+			 basedir="${build}"
+			 manifest="${etc}/MANIFEST.MF"/>
+		<!--(*) additional tasks could be added here (*)
+		<copy file="src/data/${project.prj.lc}.data"
+		todir="dist/data"/>
+		-->
+	</target>
+	
+	
+	
+	
+	
+	
+	<property name="etc"
+					 value="dist/data/etc"/>
+	<property name="author.prj"
+					 value="Tim Erdweg"/>
+	<property name="build"
+					 value="build/classes"/>
+	<property name="project.prj.lc"
+					 value="accounting"/>
+	<property name="project.prj"
+					 value="Main"/>
+	
+	
 	
 	
   

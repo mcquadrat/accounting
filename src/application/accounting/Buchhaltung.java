@@ -2,6 +2,7 @@ package application.accounting;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.LinkedList;
@@ -13,6 +14,9 @@ import java.util.logging.Level;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 
 public class Buchhaltung {
@@ -28,7 +32,17 @@ public class Buchhaltung {
 	public static void call_main(String[] args) {
 	
 		String baseName = "Buchhaltung";
-		ResourceBundle rb = ResourceBundle.getBundle(baseName);
+		//ResourceBundle rb = ResourceBundle.getBundle(baseName);
+		//ersetzt durch:
+		File file = new File("./dist/data/lang/");
+		ResourceBundle rb = null;
+		try {
+			URL[] urls = {file.toURI().toURL()};
+			ClassLoader loader = new URLClassLoader(urls);
+			rb = ResourceBundle.getBundle(baseName, Locale.getDefault(), loader);
+		} catch ( MalformedURLException e) {
+			e.printStackTrace();
+		}
 		
 		//Logger wird aktiviert
 		try{
