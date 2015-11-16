@@ -165,6 +165,53 @@
 	
 	
 	
+	<!-- Erstellen einer Datei/>-->
+	<target name="create-file" 
+				 description="a file is created from ant">
+		<!-- Create the file, take care of leading blanks -->
+		<echo file="ant_01.sh"
+				append="false">
+			DIR="src/data/testdata"
+			FILES=`ls $DIR/test_err_*.in`
+
+			COUNTER=0
+			for I in $FILES
+			do
+				java -jar ./dist/accounting-app.jar --input-file $I -l $DIR/test1.log 0.05 &gt; $DIR/test_err_$COUNTER.out
+				let COUNTER=COUNTER+1
+			done
+
+			exit 0
+		</echo>
+	</target>
+	
+	
+	<target name="execute-file"
+				 description="execute a file which is created from ant"
+				 depends="archive-application, create-file">
+		<exec executable="/bin/bash"
+				error="/dev/null"
+				os="Linux">
+			<arg file="./ant_01.sh"/>
+		</exec>
+	</target>
+	
+	<target name="cat-file"
+				 description="cat a file which is created from ant"
+				 depends="create-file">
+		<exec executable="cat"
+				error="/dev/null"
+				os="Linux">
+			<arg file="./ant_01.sh"/>
+		</exec>
+	</target>
+	
+	
+	<property name="BASH_VERSION"
+					 value="4.2.53.1"/>
+	
+	
+	
 	
   
   

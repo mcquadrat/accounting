@@ -31,6 +31,8 @@ public class Buchhaltung {
 	
 	public static void call_main(String[] args) {
 	
+		
+	
 		String baseName = "Buchhaltung";
 		//ResourceBundle rb = ResourceBundle.getBundle(baseName);
 		//ersetzt durch:
@@ -108,14 +110,23 @@ public class Buchhaltung {
 	
 	
 	
-	public void setSparer(String line){
+	public void setSparer(String line) throws IOException{
 		String splitBy = ";";
 		String[] daten = line.split(splitBy);
-		Sparer s = new Sparer(Integer.parseInt(daten[0]), daten[1], daten[2], Double.parseDouble(daten[3]), this.p);
+		Sparer s;
+		try{
+		s = new Sparer(Integer.parseInt(daten[0]), daten[1], daten[2], Double.parseDouble(daten[3]), this.p);
+		} catch (NumberFormatException e){
+			throw new IOException("Keine Zahlen eingegeben");
+		}
 		try {
 			int i = 4;
 			while (true){
-				s.setZahlenpaar(Integer.parseInt(daten[i]), Double.parseDouble(daten[i+1]));
+				try{
+					s.setZahlenpaar(Integer.parseInt(daten[i]), Double.parseDouble(daten[i+1]));
+				} catch (NumberFormatException e){
+					throw new IOException("Keine Zahlen eingegeben");
+				}
 				i+=2;
 			}
 		} catch (ArrayIndexOutOfBoundsException e){}
