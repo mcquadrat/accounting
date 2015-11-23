@@ -211,6 +211,20 @@
 					 value="4.2.53.1"/>
 	
 	
+	<target name="help"
+				 description="Zeigt die Hilfestellung an(fuehre dazu &quot;ant -e help&quot; aus)">
+		<echo>
+			Das Projekt "accounting" zeigt verschiedene Schritte
+			und Taetigkeiten, die bei der Durchfuehrung eines 
+			Projektes durchzufuehren sind.
+		</echo>
+	</target>
+	
+	
+	
+	
+	
+	
 	
 	
   
