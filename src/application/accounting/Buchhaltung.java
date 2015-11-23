@@ -102,7 +102,7 @@ public class Buchhaltung {
 				zeile++;
 			}
 		} catch (IOException e){
-			System.out.println("Fehler beim Lesen der Datei!");
+			System.out.println("Error: " + e.getMessage());
 		}
 		
 		
@@ -126,7 +126,9 @@ public class Buchhaltung {
 					s.setZahlenpaar(Integer.parseInt(daten[i]), Double.parseDouble(daten[i+1]));
 				} catch (NumberFormatException e){
 					throw new IOException("Keine Zahlen eingegeben");
-				}
+				}// catch (ArrayIndexOutOfBoundsException e){
+				//	throw new IOException("Falsche Anzahl an Einzahlungen oder Datum");
+				//}
 				i+=2;
 			}
 		} catch (ArrayIndexOutOfBoundsException e){}
