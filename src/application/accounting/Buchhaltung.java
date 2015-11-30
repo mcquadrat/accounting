@@ -9,6 +9,9 @@ public class Buchhaltung {
 	private double p;
 	private List<Sparer> sparer = new LinkedList<>();
 	
+	public final String applicationVersion = "Id: <FILE>, version <COMMITHASHABBREVIATED> of "+
+														"<COMMITTERDATEISO8601> by <AUTHORNAME>";
+	
 	public Buchhaltung(double p){
 		this.p = p;
 	}
