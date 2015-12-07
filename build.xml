@@ -2,14 +2,14 @@
 
 <project name="accounting" default="archive">
 
-  <target name="init">
-    <mkdir dir="build/classes"/>
-    <mkdir dir="dist"/>
+  <target name="init" depends="create-language-links">
   </target>
 
   <target name="compile" depends="init">
     <javac includeAntRuntime="false" srcdir="src" destdir="build/classes"
-					 debug="true" debuglevel="lines,vars,source"/>
+					 debug="true" debuglevel="lines,vars,source">
+			<classpath refid="project.class.path"/>
+		</javac>
   </target>
 
   <target name="archive" depends="compile">
@@ -17,9 +17,7 @@
         basedir="build/classes"/>
   </target>
 
-  <target name="clean" depends="init">
-    <delete dir="build"/>
-    <delete dir="dist"/>
+  <target name="clean" depends="init, delete-dirs-carefully">
   </target>
 
   <target name="execute" depends="compile">
@@ -31,6 +29,7 @@
 	<target name="execute-jar" depends="archive">
 		<java classpath="dist/accounting.jar"
 				classname="application.accounting.Main">
+			<classpath refid="project.class.path"/>
 		</java>
 	</target>
 	
@@ -46,7 +45,8 @@
 				classname="application.accounting.ArgParser">
 			<arg line="--input-file ./src/data/daten.csv
 								-o ./src/data/daten.csv.new
-								-l ./src/data/daten.csv.log 0.05"/>
+								-l ./src/data/daten.csv.log 
+								-r 0.05"/>
 		</java>
 	</target>
 	
@@ -55,9 +55,182 @@
 				classname="application.accounting.Main">
 			<arg line="--input-file ./src/data/daten.csv
 								-o ./src/data/daten.csv.new
-								-l ./src/data/daten.csv.log 0.05"/>
+								-l ./src/data/daten.csv.log 
+								-r 0.05"/>
+			<classpath refid="project.class.path"/>
 		</java>
 	</target>
+	
+	
+	<path id="project.class.path">
+		<pathelement location="build/classes/"/>
+		<pathelement path="${java.class.path}/"/>
+		<pathelement path="dist/data/lang/"/>
+		<pathelement path="lib/java/java-getopt/"/>
+	</path>
+	
+	
+	
+	<target name="create-dirs">
+		<mkdir dir="build/classes/package/de"/>
+		<mkdir dir="dist/data/etc"/>
+		</target>
+		
+	<!-- tests if the language links are set correct -->
+	<target name="test-set-language-links" depends="create-dirs">
+		<condition property="isNotALangDir">
+			<not>
+				<available file=".dist/data/lang"
+							type="dir" />
+			</not>
+		</condition>
+	</target>
+	
+	<!-- set the language link if it is not done yet -->
+	<target name="create-language-links" depends="test-set-language-links" if="isNotALangDir">
+		<exec executable="ln" error="/dev/null" os="Linux">
+			<arg line="-sn" /> <!-- n: prohibits endles /de/de/... chains -->
+			<arg file="./src/data/lang" />
+			<arg file="./dist/data/lang" />
+		</exec>
+	</target>
+		
+		
+	<target name="delete-dirs-carefully" depends="delete-language-links">
+		<delete dir="build"/>
+		<delete dir="dist"/>
+	</target>
+	
+	<!-- tests if the links are set -->
+	<target name="test-remove-language-links">
+		<condition property="isADir">
+			<available file="./dist/data/lang" type="dir" />
+		</condition>
+	</target>
+	
+	<!--remove the link if it is not done yet-->
+	<target name="delete-language-links" depends="test-remove-language-links" if="isADir">
+		<exec executable="rm" error="/dev/null" os="Linux">
+			<arg file="./dist/data/lang" />
+		</exec>
+	</target>
+	
+	
+	
+	<!-- set the current time, needed by themanifest -->
+	<tstamp>
+		<format property="timestamp.isoformat"
+				 pattern="yyyy-MM-dd'T'HH:mm:ss" locale="de"/>
+	</tstamp>
+	
+	<!-- creates the jar manifest 
+		needed for theexecution of the jar file -->
+	<target name="create-manifest"
+				depends="init">
+		<manifest file="${etc}/MANIFEST.MF">
+			<attribute name="Built-By" 
+						 value="${author.prj}"/>
+			<attribute name="Built-On"
+						 value="${timestamp.isoformat}"/>
+			<attribute name="Main-Class"
+						 value="application/accounting/Main"/>
+		</manifest>
+	</target>
+	
+	
+	<target name="archive-application"
+				 depends="compile, create-manifest"
+				 description="creates a Java archive ofan executable program">
+		<jar destfile="dist/${project.prj.lc}-app.jar"
+			 basedir="${build}"
+			 manifest="${etc}/MANIFEST.MF"/>
+		<!--(*) additional tasks could be added here (*)
+		<copy file="src/data/${project.prj.lc}.data"
+		todir="dist/data"/>
+		-->
+	</target>
+	
+	
+	
+	
+	
+	
+	<property name="etc"
+					 value="dist/data/etc"/>
+	<property name="author.prj"
+					 value="Tim Erdweg"/>
+	<property name="build"
+					 value="build/classes"/>
+	<property name="project.prj.lc"
+					 value="accounting"/>
+	<property name="project.prj"
+					 value="Main"/>
+	
+	
+	
+	<!-- Erstellen einer Datei/>-->
+	<target name="create-file" 
+				 description="a file is created from ant">
+		<!-- Create the file, take care of leading blanks -->
+		<echo file="ant_01.sh"
+				append="false">
+			DIR="src/data/testdata"
+			FILES=`ls $DIR/test_err_*.in`
+
+			COUNTER=0
+			for I in $FILES
+			do
+				java -jar ./dist/accounting-app.jar --input-file $I -l $DIR/test1.log 0.05 &gt; $DIR/test_err_$COUNTER.out
+				let COUNTER=COUNTER+1
+			done
+
+			exit 0
+		</echo>
+	</target>
+	
+	
+	<target name="execute-file"
+				 description="execute a file which is created from ant"
+				 depends="archive-application, create-file">
+		<exec executable="/bin/bash"
+				error="/dev/null"
+				os="Linux">
+			<arg file="./ant_01.sh"/>
+		</exec>
+	</target>
+	
+	<target name="cat-file"
+				 description="cat a file which is created from ant"
+				 depends="create-file">
+		<exec executable="cat"
+				error="/dev/null"
+				os="Linux">
+			<arg file="./ant_01.sh"/>
+		</exec>
+	</target>
+	
+	
+	<property name="BASH_VERSION"
+					 value="4.2.53.1"/>
+	
+	
+	<target name="help"
+				 description="Zeigt die Hilfestellung an(fuehre dazu &quot;ant -e help&quot; aus)">
+		<echo>
+			Das Projekt "accounting" zeigt verschiedene Schritte
+			und Taetigkeiten, die bei der Durchfuehrung eines 
+			Projektes durchzufuehren sind.
+		</echo>
+	</target>
+	
+	
+	
+	
+	
+	
+	
+	
+  
   
   
 </project>

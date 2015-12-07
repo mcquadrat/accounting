@@ -2,3 +2,6 @@
 .ant-targets-build.xml
 dist/
 *.tar.bz2
+*.jar
+*.log
+.gitignore

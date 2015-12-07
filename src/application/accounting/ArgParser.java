@@ -1,6 +1,6 @@
 //Klasse ArgParser, die eine Programmzeile ausliesst und analysiert.
 package application.accounting;
-import lib.java;
+import gnu.getopt.*;
 public class ArgParser {
 
     private String[] args = null;
@@ -84,8 +84,18 @@ public class ArgParser {
             nonOptions = sb.toString();
         } // end of if (
         */
+        LongOpt[] longopts = 
+				{
+					new LongOpt("input-file", LongOpt.REQUIRED_ARGUMENT, sb, 'i'),
+					new LongOpt("output-file", LongOpt.REQUIRED_ARGUMENT, sb, 'o'),
+					new LongOpt("log-file", LongOpt.REQUIRED_ARGUMENT, sb, 'l'),
+					new LongOpt("rate-of-interest", LongOpt.REQUIRED_ARGUMENT, sb, 'r'),
+					new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h'),
+					new LongOpt("version", LongOpt.NO_ARGUMENT, null, 'v'),
+				};
         
-        Getopt g = new Getopt("Buchhaltung", args, "i:o:l:r:h:v");
+        
+        Getopt g = new Getopt("Buchhaltung", args, "i:o:l:r:h:v", longopts);
         
         int c;
         String arg;
@@ -204,6 +214,9 @@ public class ArgParser {
         return nonOptions;
     } // end of method "getNonOptions()"
 
+    public String getInterest() {
+				return interest;
+		}
 
     public static final void main(final String[] args) {
         ArgParser argParser = new ArgParser(args);

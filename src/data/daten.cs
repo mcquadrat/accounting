@@ -1,0 +1,1 @@
+Mon Nov 16 15:52:28 CET 2015 INFO read from file: ./src/data/daten.csv Mon Nov 16 15:52:28 CET 2015 INFO gelesene Zeile: 0 Mon Nov 16 15:52:28 CET 2015 INFO gelesene Zeile: 1 
