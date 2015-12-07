@@ -1,5 +1,6 @@
 //Klasse ArgParser, die eine Programmzeile ausliesst und analysiert.
 package application.accounting;
+import lib.java;
 public class ArgParser {
 
     private String[] args = null;
@@ -9,6 +10,7 @@ public class ArgParser {
     private String outputFilename = null;
     private String logFilename = null;
     private String nonOptions = null;
+    private String interest = null;
 
     public ArgParser(String[] args) {
 
@@ -24,7 +26,7 @@ public class ArgParser {
 
         StringBuffer sb = null;
                                
-        for ( int i = 0; i < args.length; i++ ) {
+        /*for ( int i = 0; i < args.length; i++ ) {
 
             if ( args[i].equals("-h") || args[i].equals("--help") ) {
                 System.out.println("User asks for help");
@@ -80,8 +82,40 @@ public class ArgParser {
 
         if ( sb != null ) {
             nonOptions = sb.toString();
-        } // end of if ()
-
+        } // end of if (
+        */
+        
+        Getopt g = new Getopt("Buchhaltung", args, "i:o:l:r:h:v");
+        
+        int c;
+        String arg;
+        while ((c = g.getopt()) != -1){
+					switch(c){
+						case 'i':
+							arg = g.getOptarg();
+							this.inputFilename = arg;break;
+						case 'o':
+							arg = g.getOptarg();
+							this.outputFilename = arg;break;
+						case 'l':
+							arg = g.getOptarg();
+							this.logFilename = arg;break;
+						case 'r':
+							arg = g.getOptarg();
+							this.interest = arg;break;
+						case 'h':
+							this.showHelp = true;break;
+						case 'v':
+							this.showVersion = true;break;
+						default:
+							this.nonOptions = this.nonOptions + ", " + c;
+					}
+				}
+        
+        
+        
+        
+        
     } // end of method "parseArgs()"
 
 
