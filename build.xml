@@ -45,7 +45,8 @@
 				classname="application.accounting.ArgParser">
 			<arg line="--input-file ./src/data/daten.csv
 								-o ./src/data/daten.csv.new
-								-l ./src/data/daten.csv.log 0.05"/>
+								-l ./src/data/daten.csv.log 
+								-r 0.05"/>
 		</java>
 	</target>
 	
@@ -54,7 +55,8 @@
 				classname="application.accounting.Main">
 			<arg line="--input-file ./src/data/daten.csv
 								-o ./src/data/daten.csv.new
-								-l ./src/data/daten.csv.log 0.05"/>
+								-l ./src/data/daten.csv.log 
+								-r 0.05"/>
 			<classpath refid="project.class.path"/>
 		</java>
 	</target>
@@ -64,6 +66,7 @@
 		<pathelement location="build/classes/"/>
 		<pathelement path="${java.class.path}/"/>
 		<pathelement path="dist/data/lang/"/>
+		<pathelement path="lib/java/java-getopt/"/>
 	</path>
 	
 	
